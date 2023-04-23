@@ -6,12 +6,12 @@ import android.content.SharedPreferences.Editor
 import com.example.homecook.models.User
 import com.google.gson.Gson
 
-class SharedPref {
-    private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var editor: Editor
+class SharedPref(context: Context) {
+    private val sharedPreferences: SharedPreferences
+    private val editor: Editor
     private val gson = Gson()
 
-    constructor(context: Context) {
+    init {
         sharedPreferences = context.getSharedPreferences("home-cook-sp", Context.MODE_PRIVATE)
         editor = sharedPreferences.edit()
     }
@@ -31,8 +31,8 @@ class SharedPref {
         editor.commit()
     }
 
-    fun getUser(): User {
-        val json = sharedPreferences.getString("user", null)
-        return gson.fromJson(json,User::class.java)
+    fun getUser(): User? {
+        val json = sharedPreferences.getString("user", null) ?: return null
+        return gson.fromJson(json, User::class.java)
     }
 }

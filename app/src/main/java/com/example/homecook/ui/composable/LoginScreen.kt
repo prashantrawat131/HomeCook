@@ -6,6 +6,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -15,12 +16,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.homecook.firebase.FirebaseUtil
 import com.example.homecook.models.User
 import com.example.homecook.shared_pref.SharedPref
+import com.example.homecook.utils.CO
 import java.util.*
 
 enum class LoginSteps {
@@ -30,13 +33,11 @@ enum class LoginSteps {
     USER_DETAILS
 }
 
-
 @Composable
 fun LoginScreen(context: Context, setNavDest: (String) -> Unit) {
-
     val sharedPref = SharedPref(context)
     val firebase = FirebaseUtil()
-    var phoneNumber by remember { mutableStateOf(TextFieldValue("")) }
+    var phoneNumber by remember { mutableStateOf(TextFieldValue("8587096891")) }
     var password by remember { mutableStateOf(TextFieldValue("")) }
     var name by remember { mutableStateOf(TextFieldValue("")) }
     var step by remember {
@@ -44,11 +45,15 @@ fun LoginScreen(context: Context, setNavDest: (String) -> Unit) {
     }
 
     fun checkForPassword() {
-
+        if (password.text == sharedPref.getUser()?.password) {
+            setNavDest("main")
+        }
     }
 
     fun checkForPhoneNumber(phoneNumber: String) {
         firebase.isUserPresent(phoneNumber, success = {
+            CO.log("User already present")
+            sharedPref.storeUser(it)
             step = LoginSteps.PASSWORD
         }, failure = {
             step = LoginSteps.USER_DETAILS
@@ -85,6 +90,7 @@ fun LoginScreen(context: Context, setNavDest: (String) -> Unit) {
                 onValueChange = { newText ->
                     phoneNumber = newText
                 },
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 readOnly = false,
                 enabled = true,
                 modifier = Modifier
@@ -117,16 +123,12 @@ fun LoginScreen(context: Context, setNavDest: (String) -> Unit) {
         }
 
         if (step == LoginSteps.PASSWORD || step == LoginSteps.USER_DETAILS) {
-
             Spacer(modifier = Modifier.height(20.dp))
-
             Text(
                 text = "Enter Password",
                 color = Color.Black
             )
-
             Spacer(modifier = Modifier.height(10.dp))
-
             TextField(
                 value = password,
                 onValueChange = { newText ->
@@ -180,7 +182,7 @@ fun LoginScreen(context: Context, setNavDest: (String) -> Unit) {
 }
 
 
-@Preview
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun LoginPreview() {
     LoginScreen(LocalContext.current, {})

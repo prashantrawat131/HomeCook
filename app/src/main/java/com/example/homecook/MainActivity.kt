@@ -12,7 +12,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.homecook.firebase.FirebaseUtil
+import com.example.homecook.models.FoodItemModel
 import com.example.homecook.shared_pref.SharedPref
+import com.example.homecook.ui.composable.FoodItemDetail
 import com.example.homecook.ui.composable.HomeScreen
 import com.example.homecook.ui.composable.LoginScreen
 import com.example.homecook.ui.theme.HomeCookTheme
@@ -20,13 +23,15 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.ktx.initialize
 
 class MainActivity : ComponentActivity() {
-
     private lateinit var sharedPref: SharedPref
+    private lateinit var firebaseUtil: FirebaseUtil
+    private lateinit var selectedFoodItemModel: FoodItemModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Firebase.initialize(this)
-
+        firebaseUtil = FirebaseUtil()
+        sharedPref = SharedPref(this)
         setContent {
             HomeCookTheme {
                 Surface(
@@ -42,12 +47,19 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun App() {
         var navDest by remember {
-            mutableStateOf("login")
+            mutableStateOf(
+                if (sharedPref.getUser() == null) {
+                    "login"
+                } else {
+                    "main"
+                }
+            )
         }
 
         fun setNavDest(dest: String) {
             navDest = dest
         }
+
 
         val navController = rememberNavController()
         NavHost(
@@ -61,8 +73,17 @@ class MainActivity : ComponentActivity() {
                 })
             }
 
-            composable("main"){
-                HomeScreen(applicationContext)
+            composable("main") {
+                HomeScreen(applicationContext) { foodItemModel ->
+                    selectedFoodItemModel = foodItemModel
+                    setNavDest("foodItemDetail")
+                }
+            }
+
+            composable("foodItemDetail") {
+                FoodItemDetail(foodItemModel = selectedFoodItemModel){
+                    setNavDest(it)
+                }
             }
         }
     }
