@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
@@ -18,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberImagePainter
 import com.example.homecook.R
 import com.example.homecook.models.FoodItemModel
 
@@ -38,8 +40,16 @@ fun FoodItemDetail(foodItemModel: FoodItemModel, setNavDest: (String) -> Unit) {
 
         Spacer(modifier = Modifier.height(24.dp))
 
+        val painter: Painter = rememberImagePainter(
+            data = foodItemModel.image,
+            builder = {
+                // Optional: set any additional parameters here such as desired image size or transformations
+                crossfade(true) // Enable crossfade transition for smooth image loading
+            }
+        )
+
         Image(
-            painter = painterResource(id = foodItemModel.image),
+            painter = painter,
             contentDescription = foodItemModel.name,
             modifier = Modifier
                 .fillMaxWidth(1f),
@@ -47,7 +57,7 @@ fun FoodItemDetail(foodItemModel: FoodItemModel, setNavDest: (String) -> Unit) {
         )
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
-                text = foodItemModel.name,
+                text = foodItemModel.name.toString(),
                 fontSize = 24.sp,
                 modifier = Modifier.padding(16.dp, 16.dp),
                 style = MaterialTheme.typography.h4.copy(
@@ -76,8 +86,10 @@ fun FoodItemDetail(foodItemModel: FoodItemModel, setNavDest: (String) -> Unit) {
             onClick = {
 
             }) {
-            Text(text = "Add",
-            fontSize = 24.sp)
+            Text(
+                text = "Add",
+                fontSize = 24.sp
+            )
         }
     }
 }
@@ -88,8 +100,9 @@ fun FoodItemDetailPreview() {
     FoodItemDetail(
         FoodItemModel(
             "Vada Pav",
-            R.drawable.vada_pav,
-            150.00f
+            "https://picsum.photos/200/300",
+            150.00f,
+            "Vada Pava Description"
         )
     ) {
 

@@ -161,7 +161,8 @@ fun LoginScreen(context: Context, setNavDest: (String) -> Unit) {
                             phoneNumber.text,
                             name.text,
                             password.text,
-                            Calendar.getInstance().timeInMillis
+                            Calendar.getInstance().timeInMillis,
+                            arrayListOf()
                         )
                         registerUser(user)
                     }

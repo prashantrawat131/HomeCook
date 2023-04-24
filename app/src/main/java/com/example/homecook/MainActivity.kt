@@ -2,6 +2,7 @@ package com.example.homecook
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.addCallback
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
@@ -18,6 +19,7 @@ import com.example.homecook.shared_pref.SharedPref
 import com.example.homecook.ui.composable.FoodItemDetail
 import com.example.homecook.ui.composable.HomeScreen
 import com.example.homecook.ui.composable.LoginScreen
+import com.example.homecook.ui.composable.OrdersScreen
 import com.example.homecook.ui.theme.HomeCookTheme
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.ktx.initialize
@@ -74,15 +76,32 @@ class MainActivity : ComponentActivity() {
             }
 
             composable("main") {
-                HomeScreen(applicationContext) { foodItemModel ->
+                HomeScreen(applicationContext, { foodItemModel ->
                     selectedFoodItemModel = foodItemModel
                     setNavDest("foodItemDetail")
-                }
+                }, {
+                    setNavDest(it)
+                })
             }
 
             composable("foodItemDetail") {
-                FoodItemDetail(foodItemModel = selectedFoodItemModel){
+                FoodItemDetail(foodItemModel = selectedFoodItemModel) {
                     setNavDest(it)
+                }
+            }
+
+            composable("orders") {
+                OrdersScreen()
+            }
+        }
+
+        onBackPressedDispatcher.addCallback {
+            when (navDest) {
+                "orders", "foodItemDetail" -> {
+                    setNavDest("main")
+                }
+                else -> {
+                    finishAffinity()
                 }
             }
         }
