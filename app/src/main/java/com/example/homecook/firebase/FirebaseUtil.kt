@@ -1,15 +1,26 @@
 package com.example.homecook.firebase
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.util.Log
 import com.example.homecook.models.FoodItemModel
 import com.example.homecook.models.User
 import com.example.homecook.utils.CO
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.net.HttpURLConnection
+import java.net.URL
 
 class FirebaseUtil {
     // Write a message to the database
     private val db = Firebase.firestore
-
+    private val storage = Firebase.storage
 
     /*      User        */
     fun isUserPresent(phoneNumber: String, success: (User) -> Unit, failure: () -> Unit) {
@@ -58,5 +69,51 @@ class FirebaseUtil {
             }.addOnFailureListener {
                 failure(it.message.toString())
             }
+    }
+
+    fun addToOrders(
+        user: User,
+        foodItemModel: FoodItemModel,
+        success: (User) -> Unit,
+        failure: (String) -> Unit
+    ) {
+        db.collection("users").document(user.phoneNumber!!)
+            .update("orders", FieldValue.arrayUnion(foodItemModel)).addOnSuccessListener {
+                user.orders.add(foodItemModel)
+                success(user)
+            }.addOnFailureListener {
+                failure(it.message.toString())
+            }
+    }
+
+    /*      Storage      */
+    fun loadFoodImage(
+        context: Context,
+        imageUrl: String,
+        imageName: String,
+        success: (String) -> Unit,
+        failure: () -> Unit
+    ) {
+        val file = File(context.filesDir, imageName)
+        try {
+            val url = URL(imageUrl)
+            val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
+            connection.doInput = true
+            connection.connect()
+            val inputStream: InputStream = connection.inputStream
+            val bitmap: Bitmap = BitmapFactory.decodeStream(inputStream)
+
+            val fileOutputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
+            fileOutputStream.flush()
+            fileOutputStream.close()
+            inputStream.close()
+
+            Log.d("Download", "Image downloaded and saved: $file")
+            success(file.path)
+        } catch (e: Exception) {
+            Log.e("Download", "Error downloading image: ${e.message}")
+            failure()
+        }
     }
 }

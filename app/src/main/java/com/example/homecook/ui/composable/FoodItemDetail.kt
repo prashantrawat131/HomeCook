@@ -20,11 +20,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
+import coil.request.CachePolicy
 import com.example.homecook.R
+import com.example.homecook.firebase.FirebaseUtil
 import com.example.homecook.models.FoodItemModel
+import com.example.homecook.models.User
 
 @Composable
-fun FoodItemDetail(foodItemModel: FoodItemModel, setNavDest: (String) -> Unit) {
+fun FoodItemDetail(
+    user: User,
+    foodItemModel: FoodItemModel,
+    setNavDest: (String) -> Unit,
+    addToOrders: (FoodItemModel) -> Unit
+) {
+
     Column(modifier = Modifier.padding(0.dp, 15.dp)) {
         Image(
             painter = painterResource(id = R.drawable.ic_baseline_arrow_back_24),
@@ -45,6 +54,8 @@ fun FoodItemDetail(foodItemModel: FoodItemModel, setNavDest: (String) -> Unit) {
             builder = {
                 // Optional: set any additional parameters here such as desired image size or transformations
                 crossfade(true) // Enable crossfade transition for smooth image loading
+                memoryCacheKey(foodItemModel.toString())
+                memoryCachePolicy(CachePolicy.ENABLED)
             }
         )
 
@@ -55,6 +66,9 @@ fun FoodItemDetail(foodItemModel: FoodItemModel, setNavDest: (String) -> Unit) {
                 .fillMaxWidth(1f),
             contentScale = ContentScale.FillWidth
         )
+
+
+
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = foodItemModel.name.toString(),
@@ -80,16 +94,37 @@ fun FoodItemDetail(foodItemModel: FoodItemModel, setNavDest: (String) -> Unit) {
                 ),
             )
         }
-        Button(modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp, 0.dp),
-            onClick = {
 
-            }) {
-            Text(
-                text = "Add",
-                fontSize = 24.sp
-            )
+        if (user.orders.contains(foodItemModel)) {
+            Row() {
+                Button(onClick = { /*TODO*/ }) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_baseline_remove_24),
+                        contentDescription = "Decrease Amount"
+                    )
+                }
+
+                Text(text = user.orders.groupingBy{foodItemModel}.eachCount().toString())
+
+                Button(onClick = { /*TODO*/ }) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_baseline_add_24),
+                        contentDescription = "Decrease Amount"
+                    )
+                }
+            }
+        } else {
+            Button(modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp, 0.dp),
+                onClick = {
+                    addToOrders(foodItemModel)
+                }) {
+                Text(
+                    text = "Add",
+                    fontSize = 24.sp
+                )
+            }
         }
     }
 }
@@ -98,12 +133,15 @@ fun FoodItemDetail(foodItemModel: FoodItemModel, setNavDest: (String) -> Unit) {
 @Composable
 fun FoodItemDetailPreview() {
     FoodItemDetail(
+        User("423424232", "Sample name", "cww", 42323232L, arrayListOf()),
         FoodItemModel(
             "Vada Pav",
             "https://picsum.photos/200/300",
             150.00f,
             "Vada Pava Description"
-        )
+        ), {
+
+        }
     ) {
 
     }
