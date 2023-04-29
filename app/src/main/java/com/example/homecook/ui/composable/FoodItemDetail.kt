@@ -137,6 +137,7 @@ fun FoodItemDetailPreview() {
         FoodItemModel(
             "Vada Pav",
             "https://picsum.photos/200/300",
+            "lorem_ipsum",
             150.00f,
             "Vada Pava Description"
         ), {

@@ -7,10 +7,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -22,29 +20,34 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import coil.request.CachePolicy
-import com.example.homecook.firebase.FirebaseUtil
+import com.example.MyViewModel
 import com.example.homecook.models.FoodItemModel
 import java.io.File
+
+
+val viewModel: MyViewModel = MyViewModel()
 
 @Composable
 fun FoodItem(foodItemModel: FoodItemModel) {
 
-    val imageFile by remember {
+    val foodImageResponseObserver by viewModel.foodImageResponse.observeAsState()
+
+
+    var imageFile by remember {
         mutableStateOf(File(""))
     }
 
-    if (!imageFile.exists()) {
-        FirebaseUtil().loadFoodImage(
-            LocalContext.current,
-            foodItemModel.image!!,
-            foodItemModel.name!!, {
-
-            }
-        ) {
-
-        }
+    foodImageResponseObserver?.let {
+        imageFile = File(it)
     }
 
+    if (!imageFile.exists()) {
+        viewModel.loadFoodImage(
+            LocalContext.current,
+            foodItemModel.image!!,
+            foodItemModel.imageName!!
+        )
+    }
 
     val width = 100.dp
     Column(
@@ -89,6 +92,7 @@ fun FoodItemPreview() {
         FoodItemModel(
             "Vada Pav",
             "https://picsum.photos/200/300",
+            "lorem_ipsum",
             150.00f,
             "Vada Pav is one of the famous dishes in Mumbai. It comes in fast food  but if made with care it can be healthy and tasty as well."
         )

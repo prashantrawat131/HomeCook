@@ -1,7 +1,6 @@
 package com.example.homecook
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.addCallback
 import androidx.activity.compose.setContent
@@ -51,7 +50,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun App() {
         val user by remember {
-            mutableStateOf(sharedPref.getUser()!!)
+            mutableStateOf(sharedPref.getUser())
         }
 
         var navDest by remember {
@@ -91,10 +90,10 @@ class MainActivity : ComponentActivity() {
             }
 
             composable("foodItemDetail") {
-                FoodItemDetail(user, foodItemModel = selectedFoodItemModel, {
+                FoodItemDetail(user!!, foodItemModel = selectedFoodItemModel, {
                     setNavDest(it)
                 }) { foodItemModel ->
-                    firebaseUtil.addToOrders(user, foodItemModel, {
+                    firebaseUtil.addToOrders(user!!, foodItemModel, {
                     }) {
                         CO.log(it)
                     }
@@ -102,7 +101,7 @@ class MainActivity : ComponentActivity() {
             }
 
             composable("orders") {
-                OrdersScreen()
+                OrdersScreen(user!!)
             }
         }
 

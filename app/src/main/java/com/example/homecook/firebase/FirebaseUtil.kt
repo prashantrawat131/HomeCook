@@ -3,7 +3,6 @@ package com.example.homecook.firebase
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Log
 import com.example.homecook.models.FoodItemModel
 import com.example.homecook.models.User
 import com.example.homecook.utils.CO
@@ -11,6 +10,8 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -71,6 +72,41 @@ class FirebaseUtil {
             }
     }
 
+
+    /*      Storage      */
+    suspend fun loadFoodImage(
+        context: Context,
+        imageUrl: String,
+        imageName: String
+    ): String? {
+        val file = File(context.filesDir, imageName)
+        return try {
+            withContext(Dispatchers.IO) {
+                val url = URL(imageUrl)
+                val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
+                connection.doInput = true
+                connection.connect()
+                val inputStream: InputStream = connection.inputStream
+                val bitmap: Bitmap = BitmapFactory.decodeStream(inputStream)
+
+                val fileOutputStream = FileOutputStream(file)
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
+                fileOutputStream.flush()
+                fileOutputStream.close()
+                inputStream.close()
+
+                CO.log("Image downloaded and saved: $file")
+                imageName
+            }
+        } catch (e: Exception) {
+            CO.log("Error downloading image: ${e.message}")
+            e.printStackTrace()
+            null
+        }
+    }
+
+    /*         Orders       */
+
     fun addToOrders(
         user: User,
         foodItemModel: FoodItemModel,
@@ -84,36 +120,5 @@ class FirebaseUtil {
             }.addOnFailureListener {
                 failure(it.message.toString())
             }
-    }
-
-    /*      Storage      */
-    fun loadFoodImage(
-        context: Context,
-        imageUrl: String,
-        imageName: String,
-        success: (String) -> Unit,
-        failure: () -> Unit
-    ) {
-        val file = File(context.filesDir, imageName)
-        try {
-            val url = URL(imageUrl)
-            val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
-            connection.doInput = true
-            connection.connect()
-            val inputStream: InputStream = connection.inputStream
-            val bitmap: Bitmap = BitmapFactory.decodeStream(inputStream)
-
-            val fileOutputStream = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
-            fileOutputStream.flush()
-            fileOutputStream.close()
-            inputStream.close()
-
-            Log.d("Download", "Image downloaded and saved: $file")
-            success(file.path)
-        } catch (e: Exception) {
-            Log.e("Download", "Error downloading image: ${e.message}")
-            failure()
-        }
     }
 }
