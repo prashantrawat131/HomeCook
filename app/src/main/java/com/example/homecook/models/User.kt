@@ -4,6 +4,5 @@ data class User(
     val phoneNumber: String? = "",
     val name: String? = "",
     val password: String? = "",
-    val created_at: Long? = 0L,
-    val orders: ArrayList<FoodItemModel>
+    val created_at: Long? = 0L
 ) : java.io.Serializable

@@ -13,16 +13,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.homecook.firebase.FirebaseUtil
 import com.example.homecook.models.FoodItemModel
 import com.example.homecook.models.User
 
 @Composable
 fun OrdersScreen(user: User) {
+    val firebaseUtil = FirebaseUtil()
+
     val ordersList = remember {
         mutableStateListOf<FoodItemModel>()
     }
 
-    ordersList.addAll(user.orders)
+    firebaseUtil.loadOrders(user, {
+        ordersList.addAll(it)
+    }) {
+
+    }
 
     Column() {
         Text(text = "Orders Screen")
@@ -49,15 +56,7 @@ fun OrdersScreenPreview() {
             "323242",
             "Prashant Rawat",
             "p123",
-            3233L,
-            arrayListOf(
-                FoodItemModel(
-                    "Vada Pav",
-                    "lorem-ipsum",
-                    150.00f,
-                    "Vada Pav is one of the famous dishes in Mumbai. It comes in fast food  but if made with care it can be healthy and tasty as well."
-                )
-            )
+            3233L
         )
     )
 }

@@ -35,17 +35,14 @@ private val firebaseUtil = FirebaseUtil()
 @Composable
 fun FoodItem(foodItemModel: FoodItemModel) {
     val sharedPref = SharedPref(LocalContext.current)
-    var user by remember {
-        mutableStateOf(sharedPref.getUser()!!)
-    }
-    val foodImagesFolder = Constants.getFoodImagesFolder(LocalContext.current)
     val imageVisible = remember {
         mutableStateOf(false)
     }
-    val imageFile = remember {
-        mutableStateOf(File(foodImagesFolder, foodItemModel.imageName!!))
-    }
-    if (!imageFile.value.exists()) {
+    val imageFile = File(
+        Constants.getFoodImagesFolder(LocalContext.current),
+        foodItemModel.imageName!!
+    )
+    if (!imageFile.exists()) {
         firebaseUtil.loadFoodImage(LocalContext.current, foodItemModel.imageName!!, {
             imageVisible.value = true
         }) {
@@ -57,13 +54,13 @@ fun FoodItem(foodItemModel: FoodItemModel) {
 
     val width = IntrinsicSize.Min
     Column(
-        Modifier.width(width)
+        Modifier
+            .width(width)
     ) {
-
         if (imageVisible.value) {
-            CO.log("Painting image: ${imageFile.value.path}")
+            CO.log("Painting image: ${imageFile.path}")
             val painter: Painter = rememberImagePainter(
-                data = imageFile.value,
+                data = imageFile,
                 builder = {
                     // Optional: set any additional parameters here such as desired image size or transformations
                     crossfade(true) // Enable crossfade transition for smooth image loading
@@ -78,7 +75,7 @@ fun FoodItem(foodItemModel: FoodItemModel) {
                     .graphicsLayer {
                         shape = RoundedCornerShape(16.dp)
                     }
-                    .width(width)
+                    .width(100.dp)
                     .height(100.dp),
                 contentDescription = "Food Item")
         }
@@ -89,48 +86,10 @@ fun FoodItem(foodItemModel: FoodItemModel) {
             modifier = Modifier.align(Alignment.CenterHorizontally),
             textAlign = TextAlign.Center
         )
-        if (user.orders.contains(foodItemModel)) {
-            Row() {
-                Button(onClick = { /*TODO*/ }) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_baseline_remove_24),
-                        contentDescription = "Decrease Amount",
-                        Modifier.size(20.dp)
-                    )
-                }
 
-                Text(text = "1")
-
-                Button(onClick = { /*TODO*/ }) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_baseline_add_24),
-                        contentDescription = "Increase Amount",
-                        Modifier
-                            .size(20.dp)
-                            .background(colorResource(id = R.color.blue))
-                    )
-                }
-            }
-        } else {
-            Button(modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp, 0.dp),
-                onClick = {
-                    firebaseUtil.addToOrders(user, foodItemModel, {
-                        user = it
-                        sharedPref.storeUser(it)
-                    }) {
-
-                    }
-                }) {
-                Text(
-                    text = "Add",
-                    fontSize = 12.sp
-                )
-            }
-        }
     }
 }
+
 
 @Composable
 @Preview(showBackground = true, showSystemUi = true)

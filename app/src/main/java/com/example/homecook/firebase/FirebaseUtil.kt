@@ -73,7 +73,7 @@ class FirebaseUtil {
         failure: () -> Unit
     ) {
         val foodImagesFolder = File(context.filesDir, "foods")
-        if(!foodImagesFolder.exists()){
+        if (!foodImagesFolder.exists()) {
             foodImagesFolder.mkdirs()
         }
         val file = File(foodImagesFolder, "$imageName")
@@ -97,9 +97,67 @@ class FirebaseUtil {
         failure: (String) -> Unit
     ) {
         db.collection("users").document(user.phoneNumber!!)
-            .update("orders", FieldValue.arrayUnion(foodItemModel)).addOnSuccessListener {
-                user.orders.add(foodItemModel)
+            .collection("orders")
+            .add(foodItemModel)
+            .addOnSuccessListener {
                 success(user)
+            }.addOnFailureListener {
+                failure(it.message.toString())
+            }
+    }
+
+    fun removeOrder(
+        user: User,
+        foodItemModel: FoodItemModel,
+        success: (User) -> Unit,
+        failure: (String) -> Unit
+    ) {
+        db.collection("users").document(user.phoneNumber!!)
+            .update("orders", FieldValue.arrayRemove(foodItemModel)).addOnSuccessListener {
+                success(user)
+            }.addOnFailureListener {
+                failure(it.message.toString())
+            }
+    }
+
+    fun loadOrderCount(
+        user: User,
+        foodItemModel: FoodItemModel,
+        success: (Int) -> Unit,
+        failure: (String) -> Unit
+    ) {
+        db.collection("users").document(user.phoneNumber!!)
+            .collection("orders")
+            .get().addOnSuccessListener {
+                var ordersCount = 0
+                it.documents.forEach { documentSnapshot ->
+                    if (foodItemModel == documentSnapshot.toObject(FoodItemModel::class.java)) {
+                        ordersCount++
+                    }
+                    success(ordersCount)
+                }
+            }.addOnFailureListener {
+                failure(it.message.toString())
+            }
+    }
+
+    fun loadOrders(
+        user: User,
+        success: (ArrayList<FoodItemModel>) -> Unit,
+        failure: (String) -> Unit
+    ) {
+        db.collection("users").document(user.phoneNumber!!)
+            .collection("orders")
+            .get().addOnSuccessListener {
+                val ordersList = arrayListOf<FoodItemModel>()
+                try{
+                    it.documents.forEach { documentSnapshot ->
+                        ordersList.add(documentSnapshot.toObject(FoodItemModel::class.java)!!)
+                    }
+                }catch (e:Exception){
+
+                }
+                success(ordersList)
             }.addOnFailureListener {
                 failure(it.message.toString())
             }
