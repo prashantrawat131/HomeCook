@@ -196,11 +196,11 @@ fun HomeScreen(
                         .padding(8.dp, 8.dp)
                 ) {
                     Text(
-                        text = "Total items: 7",
+                        text = "Orders",
+                        Modifier.padding(20.dp, 0.dp),
                         color = colorResource(id = R.color.white),
-                        fontSize = 16.sp
+                        fontSize = 24.sp
                     )
-                    Text(text = "Inc. of all taxes.", color = colorResource(id = R.color.white))
                 }
                 Image(
                     painter = painterResource(id = R.drawable.ic_baseline_navigate_next_24),

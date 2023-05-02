@@ -53,7 +53,6 @@ fun OrdersScreenPreview() {
             arrayListOf(
                 FoodItemModel(
                     "Vada Pav",
-                    "https://picsum.photos/200/300",
                     "lorem-ipsum",
                     150.00f,
                     "Vada Pav is one of the famous dishes in Mumbai. It comes in fast food  but if made with care it can be healthy and tasty as well."

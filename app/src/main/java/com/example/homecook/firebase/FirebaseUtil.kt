@@ -1,8 +1,6 @@
 package com.example.homecook.firebase
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import com.example.homecook.models.FoodItemModel
 import com.example.homecook.models.User
 import com.example.homecook.utils.CO
@@ -10,13 +8,7 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.io.File
-import java.io.FileOutputStream
-import java.io.InputStream
-import java.net.HttpURLConnection
-import java.net.URL
 
 class FirebaseUtil {
     // Write a message to the database
@@ -74,38 +66,29 @@ class FirebaseUtil {
 
 
     /*      Storage      */
-    suspend fun loadFoodImage(
+    fun loadFoodImage(
         context: Context,
-        imageUrl: String,
-        imageName: String
-    ): String? {
-        val file = File(context.filesDir, imageName)
-        return try {
-            withContext(Dispatchers.IO) {
-                val url = URL(imageUrl)
-                val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
-                connection.doInput = true
-                connection.connect()
-                val inputStream: InputStream = connection.inputStream
-                val bitmap: Bitmap = BitmapFactory.decodeStream(inputStream)
-
-                val fileOutputStream = FileOutputStream(file)
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
-                fileOutputStream.flush()
-                fileOutputStream.close()
-                inputStream.close()
-
-                CO.log("Image downloaded and saved: $file")
-                imageName
-            }
-        } catch (e: Exception) {
-            CO.log("Error downloading image: ${e.message}")
-            e.printStackTrace()
-            null
+        imageName: String,
+        success: () -> Unit,
+        failure: () -> Unit
+    ) {
+        val foodImagesFolder = File(context.filesDir, "foods")
+        if(!foodImagesFolder.exists()){
+            foodImagesFolder.mkdirs()
+        }
+        val file = File(foodImagesFolder, "$imageName")
+        CO.log("File path to download image: ${file.path}")
+        val islandRef = storage.reference.child("foods/$imageName")
+        islandRef.getFile(file).addOnSuccessListener {
+            CO.log("Success downloading image")
+            success()
+        }.addOnFailureListener {
+            CO.log("Error downloading image: ${it.message}")
+            failure()
         }
     }
 
-    /*         Orders       */
+/*         Orders       */
 
     fun addToOrders(
         user: User,

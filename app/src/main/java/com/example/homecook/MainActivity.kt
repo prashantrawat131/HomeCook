@@ -21,7 +21,6 @@ import com.example.homecook.ui.composable.HomeScreen
 import com.example.homecook.ui.composable.LoginScreen
 import com.example.homecook.ui.composable.OrdersScreen
 import com.example.homecook.ui.theme.HomeCookTheme
-import com.example.homecook.utils.CO
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.ktx.initialize
 
@@ -90,13 +89,8 @@ class MainActivity : ComponentActivity() {
             }
 
             composable("foodItemDetail") {
-                FoodItemDetail(user!!, foodItemModel = selectedFoodItemModel, {
+                FoodItemDetail(user!!, foodItemModel = selectedFoodItemModel) {
                     setNavDest(it)
-                }) { foodItemModel ->
-                    firebaseUtil.addToOrders(user!!, foodItemModel, {
-                    }) {
-                        CO.log(it)
-                    }
                 }
             }
 
