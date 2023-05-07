@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.LoginActivity">
+
+    <ImageView
+        android:layout_width="@dimen/_100sdp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/phoneLl"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:src="@mipmap/ic_launcher" />
+
+    <LinearLayout
+        android:id="@+id/phoneLl"
+        android:layout_width="@dimen/_150sdp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <!--        Phone number input-->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/phoneTil"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:hint="Phone Number">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/phoneEt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="phone" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--        Submit button   -->
+        <Button
+            android:id="@+id/submitBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:text="Submit" />
+
+    </LinearLayout>
+
+</RelativeLayout>
