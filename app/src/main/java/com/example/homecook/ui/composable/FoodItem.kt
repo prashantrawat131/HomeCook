@@ -30,10 +30,10 @@ import com.example.homecook.utils.Constants
 import java.io.File
 
 
-private val firebaseUtil = FirebaseUtil()
 
 @Composable
 fun FoodItem(foodItemModel: FoodItemModel) {
+    val firebaseUtil = FirebaseUtil(LocalContext.current)
     val sharedPref = SharedPref(LocalContext.current)
     val imageVisible = remember {
         mutableStateOf(false)

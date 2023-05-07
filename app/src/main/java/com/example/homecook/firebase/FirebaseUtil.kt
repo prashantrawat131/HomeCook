@@ -5,15 +5,26 @@ import com.example.homecook.models.FoodItemModel
 import com.example.homecook.models.User
 import com.example.homecook.utils.CO
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.ktx.initialize
+import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import java.io.File
 
-class FirebaseUtil {
+class FirebaseUtil(val context: Context) {
     // Write a message to the database
-    private val db = Firebase.firestore
-    private val storage = Firebase.storage
+    private var db: FirebaseFirestore
+    private var storage: FirebaseStorage
+
+
+    init {
+        Firebase.initialize(context)
+        db = Firebase.firestore
+        storage = Firebase . storage
+    }
+
 
     /*      User        */
     fun isUserPresent(phoneNumber: String, success: (User) -> Unit, failure: () -> Unit) {
@@ -150,11 +161,11 @@ class FirebaseUtil {
             .collection("orders")
             .get().addOnSuccessListener {
                 val ordersList = arrayListOf<FoodItemModel>()
-                try{
+                try {
                     it.documents.forEach { documentSnapshot ->
                         ordersList.add(documentSnapshot.toObject(FoodItemModel::class.java)!!)
                     }
-                }catch (e:Exception){
+                } catch (e: Exception) {
 
                 }
                 success(ordersList)

@@ -21,8 +21,6 @@ import com.example.homecook.ui.composable.HomeScreen
 import com.example.homecook.ui.composable.LoginScreen
 import com.example.homecook.ui.composable.OrdersScreen
 import com.example.homecook.ui.theme.HomeCookTheme
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.ktx.initialize
 
 class MainActivity : ComponentActivity() {
     private lateinit var sharedPref: SharedPref
@@ -31,8 +29,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Firebase.initialize(this)
-        firebaseUtil = FirebaseUtil()
+        firebaseUtil = FirebaseUtil(this)
         sharedPref = SharedPref(this)
         setContent {
             HomeCookTheme {
@@ -74,7 +71,7 @@ class MainActivity : ComponentActivity() {
         )
         {
             composable("login") {
-                LoginScreen(context = applicationContext, setNavDest = {
+                LoginScreen(setNavDest = {
                     setNavDest(it)
                 })
             }

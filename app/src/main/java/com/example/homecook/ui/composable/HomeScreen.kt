@@ -27,14 +27,13 @@ import com.example.homecook.models.FoodItemModel
 import com.example.homecook.shared_pref.SharedPref
 import com.example.homecook.utils.CO
 
-private val firebaseUtil = FirebaseUtil()
-
 @Composable
 fun HomeScreen(
     context: Context,
     onFoodItemClick: (FoodItemModel) -> Unit,
     setNavDest: (String) -> Unit
 ) {
+    val firebaseUtil = FirebaseUtil(LocalContext.current)
     val sharedPref = SharedPref(context)
     val mainMenuList = remember {
         mutableStateListOf<FoodItemModel>()

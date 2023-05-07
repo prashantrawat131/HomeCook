@@ -1,13 +1,10 @@
 package com.example.homecook.ui.composable
 
-import android.content.Context
-import android.widget.Toast
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.*
@@ -16,10 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.homecook.R
 import com.example.homecook.firebase.FirebaseUtil
 import com.example.homecook.models.User
 import com.example.homecook.shared_pref.SharedPref
@@ -34,12 +35,13 @@ enum class LoginSteps {
 }
 
 @Composable
-fun LoginScreen(context: Context, setNavDest: (String) -> Unit) {
-    val sharedPref = SharedPref(context)
-    val firebase = FirebaseUtil()
+fun LoginScreen(setNavDest: (String) -> Unit) {
+    val sharedPref = SharedPref(LocalContext.current)
+    val firebase = FirebaseUtil(LocalContext.current)
     var phoneNumber by remember { mutableStateOf(TextFieldValue("8587096891")) }
     var password by remember { mutableStateOf(TextFieldValue("")) }
     var name by remember { mutableStateOf(TextFieldValue("")) }
+    val context = LocalContext.current
     var step by remember {
         mutableStateOf(LoginSteps.PHONE_NUMBER)
     }
@@ -65,46 +67,57 @@ fun LoginScreen(context: Context, setNavDest: (String) -> Unit) {
             sharedPref.storeUser(user)
             setNavDest("main")
         }, failure = {
-            Toast.makeText(context, "Unable to register", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(LocalContext.current, "Unable to register", Toast.LENGTH_SHORT).show()
         })
     }
 
     Column(
         modifier = Modifier
-            .width(IntrinsicSize.Max)
-            .height(IntrinsicSize.Max)
+            .fillMaxWidth(1f)
+            .height(IntrinsicSize.Min)
+            .padding(16.dp, 100.dp, 16.dp, 0.dp)
             .background(Color.White)
+            .clickable {
+            }
     ) {
+
+        Image(
+            painter = painterResource(id = R.mipmap.ic_launcher_foreground),
+            contentDescription = "App Image",
+            Modifier.size(200.dp)
+                .align(Alignment.CenterHorizontally)
+        )
+
         if (step == LoginSteps.PHONE_NUMBER) {
-            Text(
-                text = "Enter Phone Number",
-                color = Color.Black,
-                modifier = Modifier
-                    .padding(15.dp)
-            )
+            Column(
+            ) {
+                Text(
+                    text = "Phone Number",
+                    color = Color.Black,
+                    fontSize = 24.sp,
+                    fontFamily = FontFamily.Serif
+                )
 
-            Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
-            TextField(
-                value = phoneNumber,
-                onValueChange = { newText ->
-                    phoneNumber = newText
-                },
-                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-                readOnly = false,
-                enabled = true,
-                modifier = Modifier
-                    .border(BorderStroke(1.dp, Color.Gray), RectangleShape)
-                    .padding(15.dp)
-            )
+                OutlinedTextField(
+                    value = phoneNumber,
+                    onValueChange = { newText ->
+                        phoneNumber = newText
+                    },
+                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                    readOnly = false,
+                    enabled = true
+                )
+            }
         }
 
         if (step == LoginSteps.USER_DETAILS) {
             Text(
                 text = "Enter Full Name",
                 color = Color.Black,
-                modifier = Modifier
-                    .padding(15.dp)
+                fontSize = 24.sp,
+                fontFamily = FontFamily.Serif
             )
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -126,7 +139,9 @@ fun LoginScreen(context: Context, setNavDest: (String) -> Unit) {
             Spacer(modifier = Modifier.height(20.dp))
             Text(
                 text = "Enter Password",
-                color = Color.Black
+                color = Color.Black,
+                fontSize = 24.sp,
+                fontFamily = FontFamily.Serif
             )
             Spacer(modifier = Modifier.height(10.dp))
             TextField(
@@ -171,8 +186,6 @@ fun LoginScreen(context: Context, setNavDest: (String) -> Unit) {
                 }
             },
             modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .fillMaxWidth()
         ) {
             Text(text = "Next")
         }
@@ -181,11 +194,10 @@ fun LoginScreen(context: Context, setNavDest: (String) -> Unit) {
 
 }
 
-
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun LoginPreview() {
-    LoginScreen(LocalContext.current, {})
+    LoginScreen({})
 }
 
 

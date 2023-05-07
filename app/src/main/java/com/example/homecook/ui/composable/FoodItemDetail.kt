@@ -40,7 +40,7 @@ fun FoodItemDetail(
     foodItemModel: FoodItemModel,
     setNavDest: (String) -> Unit,
 ) {
-    val firebaseUtil = FirebaseUtil()
+    val firebaseUtil = FirebaseUtil(LocalContext.current)
     val sharedPref = SharedPref(LocalContext.current)
     var orderCount = remember {
         mutableStateOf(0)
