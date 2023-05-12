@@ -35,4 +35,27 @@ class SharedPref(context: Context) {
         val json = sharedPreferences.getString("user", null) ?: return null
         return gson.fromJson(json, User::class.java)
     }
+
+    fun storePhoneNumber(phoneNumber: String) {
+        editor.putString("phoneNumber", phoneNumber)
+        editor.commit()
+    }
+
+    fun getPhoneNumber(): String? {
+        return sharedPreferences.getString("phoneNumber", null)
+    }
+
+    fun storeIntroShown(isIntroShown: Boolean) {
+        editor.putBoolean("isIntroShown", isIntroShown)
+        editor.apply()
+    }
+
+    fun isIntroShown(): Boolean {
+        return sharedPreferences.getBoolean("isIntroShown", false)
+    }
+
+    fun clearAllData() {
+        editor.clear()
+        editor.commit()
+    }
 }

@@ -7,7 +7,7 @@ data class FoodItemModel(
     val description: String,
     var count: Int = 0,
     val itemType: ItemType = ItemType.MAIN
-) {
+) : java.io.Serializable {
     enum class ItemType {
         MAIN,
         OLD,

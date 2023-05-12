@@ -47,7 +47,7 @@ class OrdersActivity : AppCompatActivity() {
     }
 
     private fun goToOrderPlacedScreen() {
-        val intent = Intent(this, OrderPlacedActivity::class.java)
+        val intent = Intent(this, AddressActivity::class.java)
         startActivity(intent)
         finish()
     }
@@ -81,6 +81,7 @@ class OrdersActivity : AppCompatActivity() {
                 return@forEach
             }
         }
+
         if (index != -1) {
             DataRepository.foodItems[index] = item
         }

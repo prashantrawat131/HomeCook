@@ -11,7 +11,10 @@ import com.example.homecook.databinding.FoodItemBinding
 import com.example.homecook.models.FoodItemModel
 import com.example.homecook.repository.DataRepository
 
-class FoodItemRvAdapter(private val items: ArrayList<FoodItemModel>) :
+class FoodItemRvAdapter(
+    private val items: ArrayList<FoodItemModel>,
+    private val onItemClick: (FoodItemModel) -> Unit
+) :
     RecyclerView.Adapter<FoodItemRvAdapter.FoodItemViewHolder>() {
 
     private lateinit var resourceContext: Context
@@ -48,6 +51,12 @@ class FoodItemRvAdapter(private val items: ArrayList<FoodItemModel>) :
                 updateItem(item)
                 notifyItemChanged(position)
             }
+            binding.root.setOnClickListener {
+                onItemClick(item)
+            }
+            binding.foodImage.setOnClickListener { onItemClick(item) }
+            binding.foodName.setOnClickListener { onItemClick(item) }
+            binding.foodPrice.setOnClickListener { onItemClick(item) }
         }
     }
 

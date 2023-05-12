@@ -4,41 +4,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.LoginActivity">
+    tools:context=".ui.OtpActivity">
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_300sdp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/_15sdp"
-        android:src="@drawable/phone_number_login" />
+        android:layout_height="@dimen/_240sdp"
+        android:layout_margin="@dimen/_16sdp"
+        android:src="@drawable/otp_input" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_16sdp"
-        android:text="Let's\nget started"
+        android:text="Time for\nVerification"
         android:textColor="@color/purple_200"
-        android:textSize="@dimen/_36sdp" />
+        android:textSize="@dimen/_36ssp" />
 
-    <!--        Phone number input-->
+    <!--    Outlined text field-->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/phoneNumber"
+        android:id="@+id/otp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_16sdp"
-        android:layout_marginTop="@dimen/_24sdp">
+        android:layout_marginTop="@dimen/_24sdp"
+        android:layout_weight="1">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter Phone Number"
+            android:hint="Enter OTP"
             android:inputType="number" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!--        Submit button   -->
+    <!--    Submit button-->
     <Button
         android:id="@+id/submitBtn"
         android:layout_width="match_parent"
@@ -47,5 +47,4 @@
         android:layout_margin="@dimen/_15sdp"
         android:text="Submit"
         android:textAllCaps="false" />
-
 </LinearLayout>

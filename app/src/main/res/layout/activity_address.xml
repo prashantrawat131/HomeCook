@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.AddressActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:lineHeight="@dimen/_40ssp"
+            android:text="@string/enter_ndelivery_address"
+            android:textColor="@color/purple_200"
+            android:textSize="@dimen/_24ssp" />
+
+        <!-- Street address outlined -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/streetAddressOutlined"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:hint="Street Address">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextStreetAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPostalAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <!-- City Outlined -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/cityOutlined"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:hint="City">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextCity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPostalAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- State  Outlined-->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/stateOutlined"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:hint="State">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextState"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPostalAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <!-- ZIP code Outlined -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/zipCodeOutlined"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:hint="ZIP Code">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextZipCode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPostalAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <Button
+            android:id="@+id/nextBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_24sdp"
+            android:minHeight="0dp"
+            android:paddingVertical="@dimen/_8sdp"
+            android:text="Next"
+            android:textAllCaps="false" />
+
+    </LinearLayout>
+
+
+</androidx.core.widget.NestedScrollView>
