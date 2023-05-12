@@ -29,9 +29,11 @@ class OtpActivity : AppCompatActivity() {
             val userOtp = binding.otp.editText?.text.toString()
             if (userOtp.isEmpty()) {
                 CO.toast(this, "Please enter the OTP")
+                return@setOnClickListener
             }
             if (userOtp != otp) {
                 CO.toast(this, "Incorrect OTP")
+                return@setOnClickListener
             }
             sharedPref.storePhoneNumber(phoneNumber)
             sharedPref.storeIsLogin(true)

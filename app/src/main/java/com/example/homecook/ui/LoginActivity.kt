@@ -26,9 +26,11 @@ class LoginActivity : AppCompatActivity() {
             val phoneNumber = binding.phoneNumber.editText?.text.toString()
             if (phoneNumber.isEmpty()) {
                 CO.toast(this, "Please enter your phone number")
+                return@setOnClickListener
             }
             if (phoneNumber.length != 10) {
-                CO.toast(this, "Please enter a valid phone number")
+                CO.toast(this, "Phone number must be 10 digits.")
+                return@setOnClickListener
             }
 
             sendOtp(phoneNumber)
