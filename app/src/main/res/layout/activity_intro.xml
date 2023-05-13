@@ -3,8 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context=".ui.IntroActivity">
+    tools:context=".ui.activity.IntroActivity">
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
@@ -12,11 +13,31 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
+<!--    Tab Layout with circular dots-->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/_16sdp"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        app:tabBackground="@drawable/tab_selector"
+        app:tabGravity="center"
+        app:tabIndicator="@null"
+        app:tabIndicatorColor="@color/purple_200"
+        app:tabIndicatorGravity="center"
+        app:tabIndicatorHeight="0dp"
+        app:tabMaxWidth="0dp"
+        app:tabMode="fixed"
+        app:tabPaddingEnd="@dimen/_8sdp"
+        app:tabPaddingStart="@dimen/_8sdp"
+        app:tabRippleColor="@null"
+        app:tabSelectedTextColor="@color/purple_700"
+        app:tabTextAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:tabTextColor="@color/black" />
 
     <Button
         android:id="@+id/getStartedBtn"

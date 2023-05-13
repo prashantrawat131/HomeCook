@@ -1,9 +1,7 @@
-package com.example.homecook.ui
+package com.example.homecook.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.view.animation.AnimationUtils
 import android.widget.TextView
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
@@ -39,6 +37,9 @@ class MainActivity : AppCompatActivity() {
 //        Handle material navigation drawer
         binding.navView.setNavigationItemSelectedListener {
             when (it.itemId) {
+                R.id.cart->{
+                    goToCartActivity()
+                }
                 R.id.orders -> {
                     goToOrdersActivity()
                 }
@@ -56,6 +57,11 @@ class MainActivity : AppCompatActivity() {
                     val intent = Intent(Intent.ACTION_VIEW)
                     intent.data = android.net.Uri.parse("https://www.example.com")
                     startActivity(intent)
+                }
+                R.id.settings -> {
+                    val intent = Intent(this, SettingsActivity::class.java)
+                    startActivity(intent)
+                    finish()
                 }
             }
             true
@@ -80,7 +86,7 @@ class MainActivity : AppCompatActivity() {
                         CO.toast(this, "Please add some items to orders first.")
                         return@setOnMenuItemClickListener true
                     } else {
-                        val intent = Intent(this, OrdersActivity::class.java)
+                        val intent = Intent(this, CartActivity::class.java)
                         startActivity(intent)
                         finish()
                     }
@@ -106,6 +112,12 @@ class MainActivity : AppCompatActivity() {
             dialog.dismiss()
         }
         builder.show()
+    }
+
+    private fun goToCartActivity() {
+        val intent = Intent(this, CartActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun goToOrdersActivity() {

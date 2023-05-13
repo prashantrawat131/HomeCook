@@ -1,4 +1,4 @@
-package com.example.homecook.ui
+package com.example.homecook.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -54,6 +54,17 @@ class SharedPref(context: Context) {
         return sharedPreferences.getBoolean("isIntroShown", false)
     }
 
+    /*      Settings        */
+    fun storeIsLockscreenEnabled(isEnabled: Boolean) {
+        editor.putBoolean("isLockscreenEnabled", isEnabled)
+        editor.apply()
+    }
+
+    fun isLockscreenEnabled(): Boolean {
+        return sharedPreferences.getBoolean("isLockscreenEnabled", false)
+    }
+
+    /*      Main        */
     fun clearAllData() {
         editor.clear()
         editor.commit()

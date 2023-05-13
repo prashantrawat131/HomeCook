@@ -1,37 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
     android:layout_height="match_parent"
-    tools:context=".ui.activity.OrdersActivity">
+    android:orientation="vertical"
+    tools:context=".ui.activity.SettingsActivity">
 
-    <!--    Orders textview-->
+    <!--    Settings textview-->
     <TextView
-        android:id="@+id/orders_textview"
+        android:id="@+id/settings_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_16sdp"
         android:layout_marginTop="@dimen/_20sdp"
         android:layout_marginBottom="@dimen/_20sdp"
-        android:text="Orders"
+        android:text="Settings"
         android:textColor="@color/black"
         android:textSize="@dimen/_20sdp"
         android:textStyle="bold" />
 
-    <!--    Orders recyclerview-->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/orders_recyclerview"
+    <!--    Enable lockscreen -->
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/enable_lockscreen_switch"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_16sdp"
-        android:layout_marginTop="@dimen/_20sdp"
-        android:layout_marginBottom="@dimen/_20sdp"
-        android:background="@color/white"
-        android:scrollbars="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/order_item" />
+        android:text="Enable Lockscreen"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_16sdp"
+        android:textStyle="bold" />
 
 
 

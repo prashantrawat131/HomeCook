@@ -1,4 +1,4 @@
-package com.example.homecook.ui
+package com.example.homecook.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,24 +6,24 @@ import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.homecook.adapters.OrdersAdapter
-import com.example.homecook.databinding.ActivityOrdersBinding
+import com.example.homecook.adapters.CartAdapter
+import com.example.homecook.databinding.ActivityCartBinding
 import com.example.homecook.models.FoodItemModel
 import com.example.homecook.repository.DataRepository
 
-class OrdersActivity : AppCompatActivity() {
+class CartActivity : AppCompatActivity() {
 
     private val TAG = "OrdersActivityTAG"
-    private lateinit var _binding: ActivityOrdersBinding
+    private lateinit var _binding: ActivityCartBinding
     private val binding get() = _binding
     var totalPrice = 0f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _binding = ActivityOrdersBinding.inflate(layoutInflater)
+        _binding = ActivityCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setUpOrdersRecyclerView()
+        setUpCartRecyclerView()
 
         updateItem(DataRepository.foodItems[0])
 
@@ -34,10 +34,10 @@ class OrdersActivity : AppCompatActivity() {
         binding.apply {
             placeOrderBtn.setOnClickListener {
                 if (totalPrice > 0) {
-                    goToOrderPlacedScreen()
+                    goToAddressScreen()
                 } else {
                     Toast.makeText(
-                        this@OrdersActivity,
+                        this@CartActivity,
                         "Please order something",
                         Toast.LENGTH_SHORT
                     ).show()
@@ -46,7 +46,7 @@ class OrdersActivity : AppCompatActivity() {
         }
     }
 
-    private fun goToOrderPlacedScreen() {
+    private fun goToAddressScreen() {
         val intent = Intent(this, AddressActivity::class.java)
         startActivity(intent)
         finish()
@@ -58,18 +58,18 @@ class OrdersActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun setUpOrdersRecyclerView() {
+    private fun setUpCartRecyclerView() {
         val orders = arrayListOf<FoodItemModel>()
         DataRepository.foodItems.forEach {
             if (it.count > 0) {
                 orders.add(it)
             }
         }
-        binding.ordersRv.layoutManager = LinearLayoutManager(this)
-        val adapter = OrdersAdapter(orders) {
+        binding.itmesRv.layoutManager = LinearLayoutManager(this)
+        val adapter = CartAdapter(orders) {
             updateItem(it)
         }
-        binding.ordersRv.adapter = adapter
+        binding.itmesRv.adapter = adapter
     }
 
 

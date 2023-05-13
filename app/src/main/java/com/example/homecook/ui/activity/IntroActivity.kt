@@ -1,9 +1,12 @@
-package com.example.homecook.ui
+package com.example.homecook.ui.activity
 
 import android.os.Bundle
+import android.os.Looper
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.example.homecook.databinding.ActivityIntroBinding
 import com.example.homecook.shared_pref.SharedPref
+import com.example.homecook.ui.fragments.IntroFragment
 import com.google.android.material.tabs.TabLayoutMediator
 
 class IntroActivity : AppCompatActivity() {
@@ -24,6 +27,21 @@ class IntroActivity : AppCompatActivity() {
             finish()
         }
         setUpViewPager()
+//        Auto swipe view pager
+        val handler = android.os.Handler(Looper.getMainLooper())
+        val update = Runnable {
+            if (binding.viewPager.currentItem == 2) {
+                binding.viewPager.setCurrentItem(0, true)
+            } else {
+                binding.viewPager.setCurrentItem(binding.viewPager.currentItem + 1, true)
+            }
+        }
+        val timer = java.util.Timer()
+        timer.schedule(object : java.util.TimerTask() {
+            override fun run() {
+                handler.post(update)
+            }
+        }, 3000, 3000)
     }
 
     /*  ViewPager2 Adapter*/
@@ -65,6 +83,5 @@ class IntroActivity : AppCompatActivity() {
             }
         }
     }
-
 
 }

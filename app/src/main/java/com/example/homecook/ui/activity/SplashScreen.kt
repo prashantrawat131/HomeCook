@@ -1,9 +1,7 @@
-package com.example.homecook.ui
+package com.example.homecook.ui.activity
 
 import android.os.Bundle
-import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
-import com.example.homecook.R
 import com.example.homecook.databinding.ActivitySplashScreenBinding
 import com.example.homecook.shared_pref.SharedPref
 
@@ -30,9 +28,15 @@ class SplashScreen : AppCompatActivity() {
                         startActivity(intent)
                         finish()
                     } else {
-                        val intent = android.content.Intent(this, MainActivity::class.java)
-                        startActivity(intent)
-                        finish()
+                        if(sharedPref.isLockscreenEnabled()){
+                            val intent = android.content.Intent(this, LockScreenActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }else{
+                            val intent = android.content.Intent(this, MainActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }
                     }
                 }else{
                     val intent = android.content.Intent(this, IntroActivity::class.java)

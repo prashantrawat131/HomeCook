@@ -12,28 +12,49 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HomeCook">
         <activity
-            android:name=".ui.AddressActivity"
+            android:name=".ui.activity.OrdersActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.FoodDetailActivity"
+            android:name=".ui.activity.LockScreenActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.IntroActivity"
+            android:name=".ui.activity.SettingsActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.SplashScreen"
+            android:name=".ui.activity.AddressActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.activity.FoodDetailActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.activity.IntroActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.activity.SplashScreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -46,35 +67,35 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.OtpActivity"
+            android:name=".ui.activity.OtpActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.LoginActivity"
+            android:name=".ui.activity.LoginActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.OrderPlacedActivity"
+            android:name=".ui.activity.OrderPlacedActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.OrdersActivity"
+            android:name=".ui.activity.CartActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:exported="false"
             android:theme="@style/Theme.HomeCook" />
     </application>

@@ -2,9 +2,12 @@ package com.example.homecook.repository
 
 import com.example.homecook.R
 import com.example.homecook.models.FoodItemModel
+import com.example.homecook.models.OrderItemModel
 
 class DataRepository {
     companion object {
+        val ordersList = arrayListOf<OrderItemModel>()
+
         val foodItems = arrayListOf(
             FoodItemModel(
                 "Daal Makhni",
