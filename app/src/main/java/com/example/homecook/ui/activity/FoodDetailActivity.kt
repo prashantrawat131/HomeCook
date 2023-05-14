@@ -9,6 +9,9 @@ import com.example.homecook.databinding.ActivityFoodDetailBinding
 import com.example.homecook.models.FoodItemModel
 import com.example.homecook.repository.DataRepository
 
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
 class FoodDetailActivity : AppCompatActivity() {
 
     private val TAG = "FoodDetailActivityTAG"
@@ -34,7 +37,7 @@ class FoodDetailActivity : AppCompatActivity() {
     private fun updateUI(item: FoodItemModel) {
         binding.foodName.text = item.name
         binding.foodPrice.text = "₹ ".plus(item.price.toString())
-        binding.foodImage.setImageResource(item.image)
+        binding.foodImage.setImageResource(item.image!!)
         binding.addBtn.isVisible = item.count == 0
         binding.incrementLayout.isVisible = item.count > 0
         binding.count.text = item.count.toString()

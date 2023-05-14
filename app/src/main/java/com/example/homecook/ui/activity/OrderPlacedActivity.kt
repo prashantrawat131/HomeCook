@@ -7,6 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.homecook.databinding.ActivityOrderPlacedBinding
 import com.example.homecook.repository.DataRepository
 
+
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
 class OrderPlacedActivity : AppCompatActivity() {
     private val TAG = "OrderPlacedActivityTAG"
     private lateinit var _binding: ActivityOrderPlacedBinding
@@ -30,7 +34,7 @@ class OrderPlacedActivity : AppCompatActivity() {
 
     private fun goToMainActivity() {
         DataRepository.foodItems.forEach {
-            it.count = 0
+//            it.count = 0
         }
 
         val intent = Intent(this, MainActivity::class.java)

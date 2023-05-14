@@ -13,7 +13,9 @@ import com.example.homecook.repository.DataRepository
 
 class FoodItemRvAdapter(
     private val items: ArrayList<FoodItemModel>,
-    private val onItemClick: (FoodItemModel) -> Unit
+    private val onItemClick: (FoodItemModel) -> Unit,
+    private val addToCart: (FoodItemModel) -> Unit,
+    private val removeFromCart: (FoodItemModel) -> Unit
 ) :
     RecyclerView.Adapter<FoodItemRvAdapter.FoodItemViewHolder>() {
 
@@ -30,27 +32,30 @@ class FoodItemRvAdapter(
             val item = items[position]
             binding.foodName.text = item.name
             Glide.with(resourceContext)
-                .load(AppCompatResources.getDrawable(resourceContext, item.image))
+                .load(AppCompatResources.getDrawable(resourceContext, item.image!!))
                 .into(binding.foodImage)
-            binding.addBtn.isVisible = item.count == 0
+          /*  binding.addBtn.isVisible = item.count == 0
             binding.incrementLayout.isVisible = item.count > 0
             binding.count.text = item.count.toString()
             binding.foodPrice.text = "₹ ".plus(item.price.toString())
             binding.addBtn.setOnClickListener {
                 item.count++
                 updateItem(item)
+                addToCart(item)
                 notifyItemChanged(position)
             }
             binding.plusBtn.setOnClickListener {
                 item.count++
                 updateItem(item)
+                addToCart(item)
                 notifyItemChanged(position)
             }
             binding.minusBtn.setOnClickListener {
                 item.count--
                 updateItem(item)
+                removeFromCart(item)
                 notifyItemChanged(position)
-            }
+            }*/
             binding.root.setOnClickListener {
                 onItemClick(item)
             }

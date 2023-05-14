@@ -8,6 +8,9 @@ import com.example.homecook.firebase.FirebaseUtil
 import com.example.homecook.shared_pref.SharedPref
 import com.example.homecook.utils.CO
 
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
 class OtpActivity : AppCompatActivity() {
     private val TAG = "OtpActivityTAG"
     private lateinit var _binding: ActivityOtpBinding

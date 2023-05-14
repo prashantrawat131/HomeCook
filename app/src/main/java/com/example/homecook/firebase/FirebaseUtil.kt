@@ -3,6 +3,7 @@ package com.example.homecook.firebase
 import android.content.Context
 import com.example.homecook.models.FoodItemModel
 import com.example.homecook.models.User
+import com.example.homecook.repository.DataRepository
 import com.example.homecook.utils.CO
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -11,6 +12,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.ktx.initialize
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.tasks.await
 import java.io.File
 
 class FirebaseUtil(val context: Context) {
@@ -18,15 +20,36 @@ class FirebaseUtil(val context: Context) {
     private var db: FirebaseFirestore
     private var storage: FirebaseStorage
 
-
     init {
         Firebase.initialize(context)
         db = Firebase.firestore
-        storage = Firebase . storage
+        storage = Firebase.storage
+    }
+
+    /*      Admin       */
+    fun uploadFoodsData() {
+        DataRepository.foodItems.forEach {
+            db.collection("foodItems")
+                .document(it.name!!)
+                .set(it)
+                .addOnSuccessListener {
+                    CO.log("Food item uploaded")
+                }.addOnFailureListener {
+                    CO.log("Food item upload failed")
+                }
+        }
     }
 
 
     /*      User        */
+    suspend fun loadUser(phoneNumber: String): User? {
+        return db.collection("users")
+            .document(phoneNumber)
+            .get()
+            .await()
+            .toObject(User::class.java)
+    }
+
     fun createUser(phoneNumber: String, success: () -> Unit, failure: () -> Unit) {
         isUserPresent(phoneNumber, {
             CO.log("User already present")
@@ -80,24 +103,28 @@ class FirebaseUtil(val context: Context) {
             }
     }
 
-    fun registerUser(user: User, success: (User) -> Unit, failure: () -> Unit) {
+    suspend fun updateUser(user: User): User? {
         db.collection("users")
             .document(user.phoneNumber!!)
             .set(user)
-            .addOnSuccessListener {
-                success(user)
-            }.addOnFailureListener {
-                failure()
-            }
+            .await()
+        return loadUser(user.phoneNumber)
     }
 
     /*      Foods       */
+    suspend fun loadFoods(): ArrayList<FoodItemModel?> {
+        val items = arrayListOf<FoodItemModel?>()
+        db.collection("foodItems").get().await().documents.forEach {
+            items.add(it.toObject(FoodItemModel::class.java))
+        }
+        return items
+    }
+
     fun loadFoods(
-        categoryName: String,
         success: (ArrayList<FoodItemModel>) -> Unit,
         failure: (String) -> Unit
     ) {
-        db.collection("foods").document(categoryName).collection("meals").get()
+        db.collection("foods").get()
             .addOnSuccessListener {
                 val items = arrayListOf<FoodItemModel>()
                 it.documents.forEach { documentSnapshot ->
@@ -135,25 +162,25 @@ class FirebaseUtil(val context: Context) {
         }
     }
 
-/*         Orders       */
+/*         Cart       */
 
-    fun addToOrders(
+    fun addToCart(
         user: User,
         foodItemModel: FoodItemModel,
         success: (User) -> Unit,
         failure: (String) -> Unit
     ) {
-        db.collection("users").document(user.phoneNumber!!)
-            .collection("orders")
-            .add(foodItemModel)
-            .addOnSuccessListener {
-                success(user)
-            }.addOnFailureListener {
-                failure(it.message.toString())
-            }
+//        Check if food item present in cart
+        /*  db.collection("users").document(user.phoneNumber!!).get()
+              .update("cart", FieldValue.arrayUnion(cartItemModel)).addOnSuccessListener {
+                  user.cart?.add(CartItemModel(foodItemModel, ))
+                  success(user)
+              }.addOnFailureListener {
+                  failure(it.message.toString())
+              }*/
     }
 
-    fun removeOrder(
+    fun removeFromCart(
         user: User,
         foodItemModel: FoodItemModel,
         success: (User) -> Unit,
@@ -188,7 +215,7 @@ class FirebaseUtil(val context: Context) {
             }
     }
 
-    fun loadOrders(
+    fun loadCartItems(
         user: User,
         success: (ArrayList<FoodItemModel>) -> Unit,
         failure: (String) -> Unit

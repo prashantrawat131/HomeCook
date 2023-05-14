@@ -9,6 +9,9 @@ import com.example.homecook.adapters.OrdersAdapter
 import com.example.homecook.databinding.ActivityOrdersBinding
 import com.example.homecook.repository.DataRepository
 
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
 class OrdersActivity : AppCompatActivity() {
     private val TAG = "OrdersActivityTAG"
     private lateinit var _binding: ActivityOrdersBinding

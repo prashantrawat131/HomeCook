@@ -5,6 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.homecook.databinding.ActivitySplashScreenBinding
 import com.example.homecook.shared_pref.SharedPref
 
+
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
 class SplashScreen : AppCompatActivity() {
     private val TAG = "SplashScreenTAG"
     private lateinit var _binding: ActivitySplashScreenBinding

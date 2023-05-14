@@ -9,6 +9,9 @@ import com.example.homecook.shared_pref.SharedPref
 import com.example.homecook.ui.fragments.IntroFragment
 import com.google.android.material.tabs.TabLayoutMediator
 
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
 class IntroActivity : AppCompatActivity() {
     private val TAG = "IntroActivityTAG"
     private lateinit var _binding: ActivityIntroBinding

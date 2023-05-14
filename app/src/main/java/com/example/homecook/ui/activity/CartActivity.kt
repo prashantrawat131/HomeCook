@@ -5,27 +5,36 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.homecook.adapters.CartAdapter
 import com.example.homecook.databinding.ActivityCartBinding
 import com.example.homecook.models.FoodItemModel
+import com.example.homecook.models.User
 import com.example.homecook.repository.DataRepository
+import com.example.homecook.utils.CO
+import com.example.viewmodels.MainViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
 class CartActivity : AppCompatActivity() {
-
     private val TAG = "OrdersActivityTAG"
     private lateinit var _binding: ActivityCartBinding
     private val binding get() = _binding
     var totalPrice = 0f
+    private lateinit var viewModel: MainViewModel
+    private lateinit var user: User
+    private lateinit var adapter: CartAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        user = intent.getSerializableExtra("user") as User
+        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         setUpCartRecyclerView()
-
-        updateItem(DataRepository.foodItems[0])
 
         onBackPressedDispatcher.addCallback {
             goToMainActivity()
@@ -59,40 +68,26 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun setUpCartRecyclerView() {
-        val orders = arrayListOf<FoodItemModel>()
-        DataRepository.foodItems.forEach {
-            if (it.count > 0) {
-                orders.add(it)
-            }
-        }
         binding.itmesRv.layoutManager = LinearLayoutManager(this)
-        val adapter = CartAdapter(orders) {
-            updateItem(it)
+         adapter = CartAdapter(user.cart!!, { cartItem ->
+            val index = user.cart?.indexOf(cartItem)
+            cartItem.count = cartItem.count?.plus(1)
+            user.cart?.set(index!!, cartItem)
+            viewModel.updateUser(user) { exception ->
+                CO.log(exception)
+            }
+        }) { cartItem ->
+            val index = user.cart?.indexOf(cartItem)
+            cartItem.count = cartItem.count?.minus(1)
+            user.cart?.set(index!!, cartItem)
+            if (cartItem.count == 0) {
+                user.cart?.remove(cartItem)
+            }
+            viewModel.updateUser(user) { exception ->
+                CO.log(exception)
+            }
         }
         binding.itmesRv.adapter = adapter
-    }
-
-
-    private fun updateItem(item: FoodItemModel) {
-        var index = -1
-        DataRepository.foodItems.forEach {
-            if (it.image == item.image) {
-                index = DataRepository.foodItems.indexOf(it)
-                return@forEach
-            }
-        }
-
-        if (index != -1) {
-            DataRepository.foodItems[index] = item
-        }
-
-        DataRepository.foodItems.forEach {
-            totalPrice += it.price.times(it.count)
-        }
-
-        binding.apply {
-            totalPriceTv.text = "Rs. ".plus(totalPrice.toString())
-        }
     }
 
 }

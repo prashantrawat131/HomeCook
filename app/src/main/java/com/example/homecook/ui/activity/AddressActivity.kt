@@ -9,7 +9,9 @@ import com.example.homecook.models.OrderItemModel
 import com.example.homecook.repository.DataRepository
 import com.example.homecook.shared_pref.SharedPref
 import com.example.homecook.utils.CO
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AddressActivity : AppCompatActivity() {
     private val TAG = "AddressActivityTAG"
     private lateinit var _binding: ActivityAddressBinding
@@ -50,10 +52,10 @@ class AddressActivity : AppCompatActivity() {
 
             var totalPrice = 0f
             DataRepository.foodItems.forEach {
-                totalPrice += it.price.times(it.count)
+//                totalPrice += it.price?.times(it.count)!!
             }
             val foodItems = DataRepository.foodItems.filter {
-                it.count > 0
+//                it.count > 0
             } as ArrayList
             val order = OrderItemModel(
                 foodItems,

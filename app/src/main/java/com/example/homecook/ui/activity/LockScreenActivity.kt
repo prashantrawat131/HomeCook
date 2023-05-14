@@ -8,6 +8,9 @@ import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import com.example.homecook.databinding.ActivityLockScreenBinding
 
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
 class LockScreenActivity : AppCompatActivity() {
     private val TAG = "LockScreenActivityTAG"
     private lateinit var _binding: ActivityLockScreenBinding

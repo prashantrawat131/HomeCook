@@ -5,12 +5,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.homecook.databinding.CartItemBinding
+import com.example.homecook.models.CartItemModel
 import com.example.homecook.models.FoodItemModel
 
 /*  Write a recycler view adapter for order items   */
 class CartAdapter(
-    private val orders: ArrayList<FoodItemModel>,
-    private val updateItem: (FoodItemModel) -> Unit
+    private val items: ArrayList<CartItemModel>,
+    private val addToCart: (CartItemModel) -> Unit,
+    private val removeFromCart: (CartItemModel) -> Unit
 ) :
     RecyclerView.Adapter<CartAdapter.ViewHolder>() {
 
@@ -20,32 +22,37 @@ class CartAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) =
-        holder.bind(orders[position], position)
+        holder.bind(items[position], position)
 
-    override fun getItemCount(): Int = orders.size
+    override fun getItemCount(): Int = items.size
 
     inner class ViewHolder(private val binding: CartItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(order: FoodItemModel, position: Int) {
+        fun bind(item: CartItemModel, position: Int) {
+            val foodItem = items[position].foodItem
             binding.apply {
-                if (order.count == 0) {
+                if (item.count == 0) {
                     root.layoutParams.height = 0
                     root.layoutParams.width = 0
                 }
-                name.text = order.name
-                price.text = "₹ ".plus(order.price.toString())
-                quantity.text = order.count.toString().plus(" items")
-                count.text = order.count.toString()
-                total.text = order.price.times(order.count).toString()
-                Glide.with(root.context).load(order.image).into(image)
+                name.text = foodItem?.name
+                price.text = "₹ ".plus(foodItem?.price.toString())
+                quantity.text = item.count.toString().plus(" items")
+                count.text = item.count.toString()
+                total.text = foodItem?.price?.times(item.count!!).toString()
+                Glide.with(root.context).load(foodItem?.image).into(image)
                 plusBtn.setOnClickListener {
-                    order.count++
-                    updateItem(order)
+                    item.count = item.count?.plus(1)
+                    addToCart(item)
                     notifyItemChanged(position)
                 }
                 minusBtn.setOnClickListener {
-                    order.count--
-                    updateItem(order)
+                    item.count = item.count?.minus(1)
+                    if (item.count == 0) {
+                        root.layoutParams.height = 0
+                        root.layoutParams.width = 0
+                    }
+                    removeFromCart(item)
                     notifyItemChanged(position)
                 }
             }

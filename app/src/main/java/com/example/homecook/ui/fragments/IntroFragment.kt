@@ -8,6 +8,10 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.homecook.databinding.FragmentIntroBinding
 
+
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
 class IntroFragment : Fragment() {
 
     private val TAG = "IntroFragmentTAG"

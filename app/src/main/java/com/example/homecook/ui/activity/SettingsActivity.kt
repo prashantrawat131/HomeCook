@@ -7,6 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.homecook.databinding.ActivitySettingsBinding
 import com.example.homecook.shared_pref.SharedPref
 
+
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
 class SettingsActivity : AppCompatActivity() {
 
     private val TAG = "SettingsActivityTAG"

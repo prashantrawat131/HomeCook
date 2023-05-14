@@ -6,21 +6,32 @@ import android.widget.TextView
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.homecook.R
 import com.example.homecook.adapters.FoodItemRvAdapter
 import com.example.homecook.databinding.ActivityMainBinding
+import com.example.homecook.firebase.FirebaseUtil
+import com.example.homecook.models.CartItemModel
 import com.example.homecook.models.FoodItemModel
+import com.example.homecook.models.User
 import com.example.homecook.repository.DataRepository
 import com.example.homecook.shared_pref.SharedPref
 import com.example.homecook.utils.CO
+import com.example.viewmodels.MainViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivityTAG"
     private lateinit var _binding: ActivityMainBinding
     private val binding get() = _binding
     private lateinit var sharedPref: SharedPref
+    private val foodItems = arrayListOf<FoodItemModel?>()
+    private lateinit var firebaseUtil: FirebaseUtil
+    private lateinit var viewModel: MainViewModel
+    private lateinit var user: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,16 +39,36 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         sharedPref = SharedPref(this)
-        setUpTodayMenuRecyclerView()
+        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        firebaseUtil = FirebaseUtil(this)
+        setUpMenus()
 
         onBackPressedDispatcher.addCallback {
             finishAffinity()
         }
 
+        viewModel.userResponse.observe(this) {
+            user = it
+        }
+
+        viewModel.loadUser(sharedPref.getPhoneNumber()!!) { exception ->
+            CO.log(exception)
+        }
+
+        viewModel.foodsResponse.observe(this) {
+            foodItems.clear()
+            foodItems.addAll(it)
+            setUpMenus()
+        }
+
+        viewModel.loadFoods { exception ->
+            CO.log(exception)
+        }
+
 //        Handle material navigation drawer
         binding.navView.setNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.cart->{
+                R.id.cart -> {
                     goToCartActivity()
                 }
                 R.id.orders -> {
@@ -77,10 +108,10 @@ class MainActivity : AppCompatActivity() {
 //        Click listener for topAppBar menu
         binding.topAppBar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.orders -> {
+                R.id.cart -> {
                     var total = 0f
                     for (item in DataRepository.foodItems) {
-                        total += item.price * item.count
+//                        total += item.price!! * item.count
                     }
                     if (total == 0f) {
                         CO.toast(this, "Please add some items to orders first.")
@@ -126,7 +157,7 @@ class MainActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun setUpTodayMenuRecyclerView() {
+    private fun setUpMenus() {
 //        Set up the recycler view
 
         val todayFoodMenu = arrayListOf<FoodItemModel>()
@@ -155,11 +186,43 @@ class MainActivity : AppCompatActivity() {
             val linearLayoutManager =
                 LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
             recyclerView.layoutManager = linearLayoutManager
-            val adapter = FoodItemRvAdapter(it.value) {
+            val adapter = FoodItemRvAdapter(it.value, {
                 val intent = Intent(this, FoodDetailActivity::class.java)
                 intent.putExtra("foodItem", it)
                 startActivity(intent)
                 finish()
+            }, { foodItem ->
+                var index = -1
+                user.cart?.forEachIndexed { i, cartItem ->
+                    if (foodItem == cartItem.foodItem) {
+                        index = i
+                    }
+                }
+                if (index == -1) {
+                    user.cart?.add(CartItemModel(foodItem, 1))
+                }
+                else{
+                    user.cart?.get(index)?.count = user.cart?.get(index)?.count!! + 1
+                }
+                viewModel.updateUser(user) { exception ->
+                    CO.log(exception)
+                }
+            }) {
+                var index = -1
+                user.cart?.forEachIndexed { i, cartItem ->
+                    if (it == cartItem.foodItem) {
+                        index = i
+                    }
+                }
+                if (index != -1) {
+                    user.cart?.get(index)?.count = user.cart?.get(index)?.count!! - 1
+                    if (user.cart?.get(index)?.count == 0) {
+                        user.cart?.removeAt(index)
+                    }
+                    viewModel.updateUser(user) { exception ->
+                        CO.log(exception)
+                    }
+                }
             }
             recyclerView.adapter = adapter
         }
