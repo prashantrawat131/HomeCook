@@ -80,6 +80,15 @@
             android:textSize="@dimen/_12sdp" />
 
         <TextView
+            android:id="@+id/address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:text="Cash On Delivery"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12sdp" />
+
+        <TextView
             android:id="@+id/order_items"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

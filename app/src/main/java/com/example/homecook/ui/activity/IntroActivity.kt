@@ -41,7 +41,7 @@ class IntroActivity : AppCompatActivity() {
             override fun run() {
                 handler.post(update)
             }
-        }, 3000, 3000)
+        }, 1000, 2000)
     }
 
     /*  ViewPager2 Adapter*/

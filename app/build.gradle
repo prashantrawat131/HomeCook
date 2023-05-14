@@ -82,6 +82,12 @@ dependencies {
 //    Konfetti
     implementation 'nl.dionsegijn:konfetti:1.2.2'
 
+//    Gif
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.23'
+
+//    Lottie Animation
+    implementation 'com.airbnb.android:lottie:4.2.0'
+
     implementation 'com.google.code.gson:gson:2.10.1'
 
     implementation 'com.intuit.sdp:sdp-android:1.0.6'

@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.telephony.SmsManager
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -43,15 +44,15 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun sendOtp(phoneNumber: String) {
-      /*  val otp = (1000..9999).random().toString()
+        val otp = (1000..9999).random().toString()
         SmsManager.getDefault().sendTextMessage(
             phoneNumber,
             null,
             "Hi, welcome to Home Cook.\n\nYour OTP is $otp",
             null,
             null
-        )*/
-        val otp = "1234"
+        )
+//        val otp = "1234"
         CO.toast(this, "OTP sent to $phoneNumber")
         val intent = Intent(this, OtpActivity::class.java)
         intent.putExtra("phoneNumber", phoneNumber)

@@ -1,11 +1,7 @@
 package com.example.homecook.adapters
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.recyclerview.widget.RecyclerView
 import com.example.homecook.databinding.OrderItemBinding
 import com.example.homecook.models.OrderItemModel
@@ -33,7 +29,7 @@ class OrdersAdapter(private val ordersList: ArrayList<OrderItemModel>) :
         fun bind(position: Int) {
             val order = ordersList[position]
             binding.orderId.text = "#${order.orderTime}"
-            binding.totalPrice.text = "Total: ${order.totalPrice}"
+            binding.totalPrice.text = "Total: \u20B9 ${order.totalPrice}"
             binding.paymentMethod.text = order.paymentMethod
 
             val items = StringBuilder()
@@ -42,14 +38,15 @@ class OrdersAdapter(private val ordersList: ArrayList<OrderItemModel>) :
                 items.append(", ")
             }
             binding.orderItems.text = items.toString().substring(0, items.length - 2)
-
+            binding.address.text = order.address
             try {
                 val currentTime = System.currentTimeMillis()
                 val orderTime = order.orderTime
                 val diff = currentTime - orderTime
                 val timeToDeliver = 1000 * 60 * 10 * order.foodItemsList.size
                 if (diff < timeToDeliver) {
-                    binding.timeLeft.text = ((timeToDeliver - diff)/(1000*60)).toString().plus(" mins left")
+                    binding.timeLeft.text =
+                        ((timeToDeliver - diff) / (1000 * 60)).toString().plus(" mins left")
                 } else {
                     binding.timeLeft.text = "Delivered"
                 }

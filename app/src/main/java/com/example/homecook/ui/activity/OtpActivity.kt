@@ -40,14 +40,9 @@ class OtpActivity : AppCompatActivity() {
             sharedPref.storePhoneNumber(phoneNumber)
             sharedPref.storeIsLogin(true)
             CO.toast(this, "OTP verified")
-            firebaseUtil.createUser(phoneNumber, {
-                CO.log("User created")
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                finish()
-            }, {
-                CO.log("User creation failed")
-            })
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 }
