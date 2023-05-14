@@ -27,7 +27,43 @@ class FirebaseUtil(val context: Context) {
 
 
     /*      User        */
-    fun isUserPresent(phoneNumber: String, success: (User) -> Unit, failure: () -> Unit) {
+    fun createUser(phoneNumber: String, success: () -> Unit, failure: () -> Unit) {
+        isUserPresent(phoneNumber, {
+            CO.log("User already present")
+            success()
+        }, {
+            CO.log("User not present")
+            val user = User(phoneNumber, System.currentTimeMillis())
+            createUserInDb(user, success, failure)
+        })
+
+        val user = User(phoneNumber, System.currentTimeMillis())
+        db.collection("users")
+            .document(phoneNumber)
+            .set(user)
+            .addOnSuccessListener {
+                CO.log("User created")
+                success()
+            }.addOnFailureListener {
+                CO.log("User creation failed")
+                failure()
+            }
+    }
+
+    private fun createUserInDb(user: User, success: () -> Unit, failure: () -> Unit) {
+        db.collection("users")
+            .document(user.phoneNumber!!)
+            .set(user)
+            .addOnSuccessListener {
+                CO.log("User created")
+                success()
+            }.addOnFailureListener {
+                CO.log("User creation failed")
+                failure()
+            }
+    }
+
+    private fun isUserPresent(phoneNumber: String, success: (User) -> Unit, failure: () -> Unit) {
         db.collection("users")
             .document(phoneNumber).get().addOnSuccessListener {
                 try {

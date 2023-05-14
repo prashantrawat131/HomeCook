@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.homecook.databinding.ActivityOtpBinding
+import com.example.homecook.firebase.FirebaseUtil
 import com.example.homecook.shared_pref.SharedPref
 import com.example.homecook.utils.CO
 
@@ -14,12 +15,13 @@ class OtpActivity : AppCompatActivity() {
     private lateinit var phoneNumber: String
     private lateinit var otp: String
     private lateinit var sharedPref: SharedPref
+    private lateinit var firebaseUtil: FirebaseUtil
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityOtpBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        firebaseUtil = FirebaseUtil(this)
         sharedPref = SharedPref(this)
 
         phoneNumber = intent.getStringExtra("phoneNumber") ?: ""
@@ -38,9 +40,14 @@ class OtpActivity : AppCompatActivity() {
             sharedPref.storePhoneNumber(phoneNumber)
             sharedPref.storeIsLogin(true)
             CO.toast(this, "OTP verified")
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
+            firebaseUtil.createUser(phoneNumber, {
+                CO.log("User created")
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+            }, {
+                CO.log("User creation failed")
+            })
         }
     }
 }
